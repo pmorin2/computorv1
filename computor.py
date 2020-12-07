@@ -5,9 +5,9 @@ import sys
 
 def formating(arr):
     sign = ""
-    deg0 = np.array([])
-    deg1 = np.array([])
-    deg2 = np.array([])
+    deg0 = np.array([], dtype=object)
+    deg1 = np.array([], dtype=object)
+    deg2 = np.array([], dtype=object)
     for elem in arr:
         if elem == "+" or elem =="-":
             if not sign == "":
@@ -28,6 +28,9 @@ def formating(arr):
                 nbr = re.findall(r"[-+]?\d*\.\d+|\d+", (sign + elem))
                 if len(nbr) == 2 or not ("X" in elem or "x" in elem): deg0 = np.append(deg0, nbr[0])
                 else: deg0 = np.append(deg0, float(sign + '1'))
+            else:
+                print("Nah, that degree is too high for me")
+                sys.exit(-1)
             sign = ""
     return deg0, deg1, deg2
 
@@ -38,13 +41,13 @@ def addf(arr):
         if element[::-1].find('.') > fnum: fnum = element[::-1].find('.')
         result += float(element)
         result = round(result, fnum)
-        print(result)
+    if result.is_integer(): result = int(result)
     return result
 
 def allInOne(arr):
     for deg in arr:
         for elem in deg[1]:
-            deg[0] = np.append(deg[0], float(elem) * -1)
+            deg[0] = np.append(deg[0], str(float(elem) * -1))
     return [addf(arr[0][0]), addf(arr[1][0]), addf(arr[2][0])]
 
 if __name__ == '__main__':
@@ -56,14 +59,18 @@ if __name__ == '__main__':
         print("WTF's wrong with you ? You forgot the \"=\" !")
         sys.exit(-1)
     polynome = args.polynome.split("=")
-    print(polynome[0])
-    print(polynome[1])
     first = list(map(str.strip, (re.split("(\+|\-)", polynome[0]))))
     second = list(map(str.strip, (re.split("(\+|\-)", polynome[1]))))
     fdeg0, fdeg1, fdeg2 = formating(first)
     sdeg0, sdeg1, sdeg2 = formating(second)
-    print (fdeg0, sdeg0)
-    print (fdeg1, sdeg1)
-    print (fdeg2, sdeg2)
+    fdeg0 = np.append(fdeg0, str(float(0)))
     Arr = allInOne(np.array([[fdeg0, sdeg0], [fdeg1, sdeg1], [fdeg2, sdeg2]], dtype=object))
-    print (Arr)
+    print("Forme réduite: " + (((str(Arr[0]) if Arr[0] >= 0 else ("- " + str(Arr[0] * -1))) + " * X^0" if Arr[0] != 0 else "")
+            + (((" + " if Arr[0] != 0 else "") + str(Arr[1]) if Arr[1] > 0 else (" - " + str(Arr[1] * -1))) + " * X^1" if Arr[1] != 0 else "")
+            + (((" + " if (Arr[1] != 0 or Arr[0] != 0) else "") + str(Arr[2]) if Arr[2] > 0 else (" - " + str(Arr[2] * -1))) + " * X^2" if Arr[2] != 0 else "")
+            if not (Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0) else "0") + " = 0")
+    print("Autre écriture: " + (((str(Arr[0]) if Arr[0] >= 0 else ("- " + str(Arr[0] * -1))) if Arr[0] != 0 else "")
+            + (((" + " if Arr[0] != 0 else "") + str(Arr[1]) if Arr[1] > 0 else (" - " + str(Arr[1] * -1))) + "x" if Arr[1] != 0 else "")
+            + (((" + " if (Arr[1] != 0 or Arr[0] != 0) else "") + str(Arr[2]) if Arr[2] > 0 else (" - " + str(Arr[2] * -1))) + "x^2" if Arr[2] != 0 else "")
+            if not (Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0) else "0") + " = 0")
+    print("Degré du polynome: " + ("2" if (Arr[2] != 0) else ("1" if (Arr[1] != 0) else "0")))
