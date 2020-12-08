@@ -1,3 +1,4 @@
+from fractions import Fraction
 import argparse
 import numpy as np
 import re
@@ -21,11 +22,11 @@ def formating(arr):
                 if len(nbr) == 2: deg2 = np.append(deg2, nbr[0])
                 else: deg2 = np.append(deg2, float(sign + '1'))
             elif "X" == elem[-1] or "x" == elem[-1] or "X^1" in elem or "x^1" in elem:
-                nbr = re.findall(r"[-+]?\d*\.\d+|\d+", (sign + elem))
+                nbr = re.findall(r"[-+]?\d*\.\d+|[-+]?\d+", (sign + elem))
                 if len(nbr) == 2 or (("X" == elem[-1] or "x" == elem[-1]) and len(nbr) > 0): deg1 = np.append(deg1, nbr[0])
                 else: deg1 = np.append(deg1, float(sign + '1'))
             elif not ("X" in elem or "x" in elem) or "X^0" in elem or "x^0" in elem:
-                nbr = re.findall(r"[-+]?\d*\.\d+|\d+", (sign + elem))
+                nbr = re.findall(r"[-+]?\d*\.\d+|[-+]?\d+", (sign + elem))
                 if len(nbr) == 2 or not ("X" in elem or "x" in elem): deg0 = np.append(deg0, nbr[0])
                 else: deg0 = np.append(deg0, float(sign + '1'))
             else:
@@ -59,8 +60,11 @@ if __name__ == '__main__':
         print("WTF's wrong with you ? You forgot the \"=\" !")
         sys.exit(-1)
     polynome = args.polynome.split("=")
+    polynome = list(map(str.strip, polynome))
     first = list(map(str.strip, (re.split("(\+|\-)", polynome[0]))))
     second = list(map(str.strip, (re.split("(\+|\-)", polynome[1]))))
+    first = [x for x in first if x]
+    second = [x for x in second if x]
     fdeg0, fdeg1, fdeg2 = formating(first)
     sdeg0, sdeg1, sdeg2 = formating(second)
     fdeg0 = np.append(fdeg0, str(float(0)))
@@ -74,3 +78,29 @@ if __name__ == '__main__':
             + (((" + " if (Arr[1] != 0 or Arr[0] != 0) else "") + str(Arr[2]) if Arr[2] > 0 else (" - " + str(Arr[2] * -1))) + "x^2" if Arr[2] != 0 else "")
             if not (Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0) else "0") + " = 0")
     print("Degré du polynome: " + ("2" if (Arr[2] != 0) else ("1" if (Arr[1] != 0) else "0")))
+    if Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0:
+        print("Tout les nombres sont solutions !")
+    elif Arr[1] == 0 and Arr[2] == 0:
+        print("L'équation n'a pas de solution !")
+    elif Arr[2] == 0:
+        solution = Fraction((-1 * Arr[0]), Arr[1])
+        print("l'unique solution est x = " + str(solution))
+    elif Arr[2] != 0:
+        delta = Arr[1]**2 - 4 * Arr[2] * Arr[0]
+        print("Le discriminant est strictement "
+                + ("positif" if delta > 0 else ("négatif" if delta < 0 else "egal à zéro")))
+        if delta == 0:
+            solution = Fraction((-1 * Arr[1]), (2 * Arr[2]))
+            print("l'unique solution est x = " + str(solution))
+        elif delta > 0:
+            if np.sqrt(delta).is_integer():
+                solution1 = Fraction((-1 * Arr[1] - int(np.sqrt(delta))),(2 * Arr[2]))
+                solution2 = Fraction((-1 * Arr[1] + int(np.sqrt(delta))),(2 * Arr[2]))
+                print("les deux solutions sont:\nx = " + str(solution1) + "\nx = " + str(solution2))
+            else:
+                print("les deux solutions sont:\nx = (" + str(-1 * Arr[1]) + " - √" + str(delta) + ") / " + str(2 * Arr[2]) + " soit environ " + str("{:.4f}".format((-1 * Arr[1] - np.sqrt(delta)) / (2 * Arr[2])))
+                        + "\nx = (" + str(-1 * Arr[1]) + " + √" + str(delta) + ") / " + str(2 * Arr[2])  + " soit environ " + str("{:.4f}".format((-1 * Arr[1] + np.sqrt(delta)) / (2 * Arr[2]))))
+        elif delta < 0:
+            delta = -delta
+            print("les deux solutions complexes sont:\nx = (" + str(-1 * Arr[1]) + " - √" + str(delta) + ") / " + str(2 * Arr[2])
+                    + "\nx = (" + str(-1 * Arr[1]) + " + √" + str(delta) + ") / " + str(2 * Arr[2]))
