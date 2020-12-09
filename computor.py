@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from fractions import Fraction
 import argparse
 import numpy as np
@@ -87,20 +88,37 @@ if __name__ == '__main__':
         print("l'unique solution est x = " + str(solution))
     elif Arr[2] != 0:
         delta = Arr[1]**2 - 4 * Arr[2] * Arr[0]
+        delta = round(delta, 10)
         print("Le discriminant est strictement "
                 + ("positif" if delta > 0 else ("négatif" if delta < 0 else "egal à zéro")))
         if delta == 0:
             solution = Fraction((-1 * Arr[1]), (2 * Arr[2]))
             print("l'unique solution est x = " + str(solution))
         elif delta > 0:
-            if np.sqrt(delta).is_integer():
+            if np.sqrt(delta).is_integer() and Arr[1].is_integer() and ( 2 * Arr[2]).is_integer():
                 solution1 = Fraction((-1 * Arr[1] - int(np.sqrt(delta))),(2 * Arr[2]))
                 solution2 = Fraction((-1 * Arr[1] + int(np.sqrt(delta))),(2 * Arr[2]))
-                print("les deux solutions sont:\nx = " + str(solution1) + "\nx = " + str(solution2))
+                print("les deux solutions sont:"
+                        + "\nx = " + str(solution1)
+                        + "\nx = " + str(solution2))
             else:
-                print("les deux solutions sont:\nx = (" + str(-1 * Arr[1]) + " - √" + str(delta) + ") / " + str(2 * Arr[2]) + " soit environ " + str("{:.4f}".format((-1 * Arr[1] - np.sqrt(delta)) / (2 * Arr[2])))
+                print("les deux solutions sont:"
+                        + "\nx = (" + str(-1 * Arr[1]) + " - √" + str(delta) + ") / " + str(2 * Arr[2]) + " soit environ " + str("{:.4f}".format((-1 * Arr[1] - np.sqrt(delta)) / (2 * Arr[2])))
                         + "\nx = (" + str(-1 * Arr[1]) + " + √" + str(delta) + ") / " + str(2 * Arr[2])  + " soit environ " + str("{:.4f}".format((-1 * Arr[1] + np.sqrt(delta)) / (2 * Arr[2]))))
         elif delta < 0:
             delta = -delta
-            print("les deux solutions complexes sont:\nx = (" + str(-1 * Arr[1]) + " - √" + str(delta) + ") / " + str(2 * Arr[2])
-                    + "\nx = (" + str(-1 * Arr[1]) + " + √" + str(delta) + ") / " + str(2 * Arr[2]))
+            Arr = list(map(float, Arr))
+            print("les deux solutions complexes sont:"
+                + "\nx = " + (str(Fraction(int(-1 * Arr[1]),int(2 * Arr[2])))  if Arr[1].is_integer() and (2 * Arr[2]).is_integer() else (str(-1 * Arr[1]) + "/" + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2]))))
+                + " - " +(str(Fraction((int(np.sqrt(delta))),int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and (2 * Arr[2]).is_integer() else ("(√" + str(delta) + " / " + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2])) + ")i"))
+                + "\nx = " + (str(Fraction(int(-1 * Arr[1]),int(2 * Arr[2])))  if Arr[1].is_integer() and (2 * Arr[2]).is_integer() else (str(-1 * Arr[1]) + "/" + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2]))))
+                + " + " +(str(Fraction((int(np.sqrt(delta))),int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and (2 * Arr[2]).is_integer() else ("(√" + str(delta) + " / " + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2])) + ")i")))
+            xgraph = np.linspace(-10,10,num=100)
+            fx = []
+            for i in range(len(xgraph)):
+                fx.append(Arr[2]*xgraph[i]**2 + Arr[1]*xgraph[i] + Arr[0])
+            plt.plot(xgraph,fx)
+            plt.grid()
+            plt.axvline()
+            plt.axhline()
+            plt.show()
