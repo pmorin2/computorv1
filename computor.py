@@ -56,7 +56,7 @@ def allInOne(arr):
     return [addf(arr[0][0]), addf(arr[1][0]), addf(arr[2][0])]
 
 ### Main program ###
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("polynome", type=str, help="mixing sequence")
     parser.add_argument('-g', "--graph", help="print graph of the given valid polynomial", action="store_true")
@@ -68,6 +68,9 @@ if __name__ == '__main__':
             sys.exit(-1)
     if not "=" in args.polynome:
         print("WTF's wrong with you ? You forgot the \"=\" !")
+        sys.exit(-1)
+    elif args.polynome.find("=") != args.polynome.rfind("="):
+        print("WTF's wrong with you ? You put 2 \"=\" !")
         sys.exit(-1)
     polynome = args.polynome.split("=")
     polynome = list(map(str.strip, polynome))
@@ -112,6 +115,7 @@ if __name__ == '__main__':
     elif Arr[2] != 0:
         delta = Arr[1]**2 - 4 * Arr[2] * Arr[0]
         delta = round(delta, 10)
+        if delta.is_integer(): delta = int(delta)
         print("The discriminant is strickly "
                 + ("positive" if delta > 0 else ("negative" if delta < 0 else "equal to zero")))
         
@@ -129,9 +133,9 @@ if __name__ == '__main__':
             delta = -delta
             print("The two complex solutions are:"
                 + "\nx = " + (str(Fraction(int(-1 * Arr[1]),int(2 * Arr[2])))  if Arr[1].is_integer() and (2 * Arr[2]).is_integer() else (str(-1 * Arr[1]) + "/" + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2]))))
-                + " - " +(str(Fraction((int(np.sqrt(delta))),int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and (2 * Arr[2]).is_integer() else ("(√" + str(delta) + " / " + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2])) + ")i"))
+                + " - (" +(str(Fraction((int(np.sqrt(delta))),int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and (2 * Arr[2]).is_integer() else ("√" + str(delta) + " / " + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2])))) + ")i"
                 + "\nx = " + (str(Fraction(int(-1 * Arr[1]),int(2 * Arr[2])))  if Arr[1].is_integer() and (2 * Arr[2]).is_integer() else (str(-1 * Arr[1]) + "/" + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2]))))
-                + " + " +(str(Fraction((int(np.sqrt(delta))),int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and (2 * Arr[2]).is_integer() else ("(√" + str(delta) + " / " + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2])) + ")i")))
+                + " + (" +(str(Fraction((int(np.sqrt(delta))),int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and (2 * Arr[2]).is_integer() else ("√" + str(delta) + " / " + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2])))) + ")i")
     
     ###Optional graph###        
     if args.graph and (Arr[1] != 0 or Arr[2] != 0):
