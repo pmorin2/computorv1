@@ -86,28 +86,28 @@ if __name__ == "__main__":
     sdeg0, sdeg1, sdeg2 = formating(second)
     fdeg0 = np.append(fdeg0, str(float(0)))
     Arr = allInOne(np.array([[fdeg0, sdeg0], [fdeg1, sdeg1], [fdeg2, sdeg2]], dtype=object))
-    print("Reduced form: " + (((str(Arr[0]) if Arr[0] >= 0 else ("- " + str(Arr[0] * -1))) + " * X^0" if Arr[0] != 0 else "")
+    print("Reduced form: \033[1m" + (((str(Arr[0]) if Arr[0] >= 0 else ("- " + str(Arr[0] * -1))) + " * X^0" if Arr[0] != 0 else "")
             + (((" + " if Arr[0] != 0 else "") + str(Arr[1]) if Arr[1] > 0 else (" - " + str(Arr[1] * -1))) + " * X^1" if Arr[1] != 0 else "")
             + (((" + " if (Arr[1] != 0 or Arr[0] != 0) else "") + str(Arr[2]) if Arr[2] > 0 else (" - " + str(Arr[2] * -1))) + " * X^2" if Arr[2] != 0 else "")
-            if not (Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0) else "0") + " = 0")
-    print("diferent style: " + (((str(Arr[0]) if Arr[0] >= 0 else ("- " + str(Arr[0] * -1))) if Arr[0] != 0 else "")
+            if not (Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0) else "0") + " = 0\033[0m")
+    print("diferent style: \033[1m" + (((str(Arr[0]) if Arr[0] >= 0 else ("- " + str(Arr[0] * -1))) if Arr[0] != 0 else "")
             + (((" + " if Arr[0] != 0 else "") + str(Arr[1]) if Arr[1] > 0 else (" - " + str(Arr[1] * -1))) + "x" if Arr[1] != 0 else "")
             + (((" + " if (Arr[1] != 0 or Arr[0] != 0) else "") + str(Arr[2]) if Arr[2] > 0 else (" - " + str(Arr[2] * -1))) + "x^2" if Arr[2] != 0 else "")
-            if not (Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0) else "0") + " = 0")
-    print("Polynomial degree: " + ("2" if (Arr[2] != 0) else ("1" if (Arr[1] != 0) else "0")))
+            if not (Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0) else "0") + " = 0\033[0m")
+    print("Polynomial degree: " + "\033[1m" + "\033[91m" + ("2" if (Arr[2] != 0) else ("1" if (Arr[1] != 0) else "0")) + "\033[0m")
     Arr = list(map(float, Arr))
     
     ### Case 0 = 0 ###
     if Arr[0] == 0 and Arr[1] == 0 and Arr[2] == 0:
-        print("All numbers are solution !")
+        print("\033[1mAll numbers are solution !")
     
     ### Case number = 0 ###
     elif Arr[1] == 0 and Arr[2] == 0:
-        print("There is no solution !")
+        print("\033[1mThere is no solution !")
     
     ### Case degree 1 like number + number * x = 0 ###
     elif Arr[2] == 0:
-        print("The only solution is x = "
+        print("The only solution is \033[1mx = "
                 + (str(Fraction((-1 * int(Arr[0])), int(Arr[1]))) if Arr[0].is_integer() and Arr[1].is_integer()
                 else (str(-1 * Arr[0]) + "/" + str(Arr[1]))))
     
@@ -117,21 +117,21 @@ if __name__ == "__main__":
         delta = round(delta, 10)
         if delta.is_integer(): delta = int(delta)
         print("The discriminant is strickly "
-                + ("positive" if delta > 0 else ("negative" if delta < 0 else "equal to zero")))
-        
+                + "\033[1m" + "\033[91m" + ("positive" if delta > 0 else ("negative" if delta < 0 else "equal to zero")) + "\033[0m")
+        if delta != 0: print("\033[1m\033[91mΔ = " + str(delta) + "\033[0m")
         if delta == 0:
-            print("The only solution is x = "
+            print("The only solution is \033[1mx = "
                     + (str(Fraction((-1 * int(Arr[1])), int(2 * Arr[2]))) if Arr[1].is_integer() and (2 * Arr[2]).is_integer()
                     else (str(-1 * Arr[1]) + "/" + str(2 * Arr[2]))))
         
         elif delta > 0:
-             print("The two solutions are:"
+             print("The two solutions are:\033[1m"
                         + "\nx = " + (str(Fraction((-1 * int(Arr[1]) - int(np.sqrt(delta))), int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and Arr[1].is_integer() and ( 2 * Arr[2]).is_integer() else ("(" + str(-1 * Arr[1]) + " - √" + str(delta) + ") / " + str(2 * Arr[2]) + " or approximately " + str("{:.4f}".format((-1 * Arr[1] - np.sqrt(delta)) / (2 * Arr[2])))))
                         + "\nx = " + (str(Fraction((-1 * int(Arr[1]) + int(np.sqrt(delta))), int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and Arr[1].is_integer() and ( 2 * Arr[2]).is_integer() else ("(" + str(-1 * Arr[1]) + " + √" + str(delta) + ") / " + str(2 * Arr[2]) + " or approximately " + str("{:.4f}".format((-1 * Arr[1] + np.sqrt(delta)) / (2 * Arr[2]))))))
         
         elif delta < 0:
             delta = -delta
-            print("The two complex solutions are:"
+            print("The two complex solutions are:\033[1m"
                 + "\nx = " + (str(Fraction(int(-1 * Arr[1]),int(2 * Arr[2])))  if Arr[1].is_integer() and (2 * Arr[2]).is_integer() else (str(-1 * Arr[1]) + "/" + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2]))))
                 + " - (" +(str(Fraction((int(np.sqrt(delta))),int(2 * Arr[2]))) if np.sqrt(delta).is_integer() and (2 * Arr[2]).is_integer() else ("√" + str(delta) + " / " + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2])))) + ")i"
                 + "\nx = " + (str(Fraction(int(-1 * Arr[1]),int(2 * Arr[2])))  if Arr[1].is_integer() and (2 * Arr[2]).is_integer() else (str(-1 * Arr[1]) + "/" + (str(int(2 * Arr[2])) if (2 * Arr[2]).is_integer() else str(2 * Arr[2]))))
